@@ -1,0 +1,139 @@
+@startuml gui_classes
+  set namespaceSeparator none
+
+  package "app.gui" {
+    class "app.gui.calculationsWindow.Ui_metricsWindow" as app.gui.calculationsWindow.Ui_metricsWindow {
+      backMainBtn
+      classes : int
+      exportExcelBtn
+      helpBtn_2
+      mainWindow
+      manualWindow
+      metricsTbl
+      nocLbl
+      projectNameLbl_2
+      project_obj
+      ui
+      window
+      backToMain()
+      exportToExcel()
+      openManual()
+      retranslateUi(metricsWindow)
+      setupUi(metricsWindow, project_obj, mainWindow)
+    }
+    class "app.gui.mainWindow.Ui_MainWindow" as app.gui.mainWindow.Ui_MainWindow {
+      calculateBtn
+      calculationsWindow
+      centralwidget
+      file_name : str
+      helpBtn
+      label
+      manualWindow
+      nameLbl
+      openFolderButton
+      pythonProjectLbl
+      selectProjectLbl
+      selectedProjectLbl
+      statusbar
+      ui
+      window
+      calcMetrics()
+      openFiles()
+      openManual()
+      retranslateUi(MainWindow)
+      setupUi(MainWindow)
+    }
+    class "app.gui.metricsManualWindow.Ui_Dialog" as app.gui.metricsManualWindow.Ui_Dialog {
+      ...
+      previousWindow
+      pushButton
+      window
+      backToWindow()
+      retranslateUi(Dialog)
+      setupUi(Dialog, previousWindow)
+    }
+  }
+  package "app.src" {
+    package "enteties" {
+        class Project {
+            
+        }
+
+        class "Class" as c {
+            
+        }
+
+        class PythonFile {
+            
+        }
+    }
+    package "generator" {
+        class AstGenerator {
+        }
+    }
+
+    package "visitors" {
+        class CCNodeVisitor {
+            
+        }
+
+        class ClassAttrNodeVisitor {
+            
+        }
+
+        class HierarchyNodeVisitor {
+            
+        }
+
+        class InitCommonsNodeVisitor {
+            
+        }
+
+        class LCOMNodeVisitor {
+            
+        }
+
+        class LOCNodeVisitor {
+            
+        }
+
+        class MethodsCalledNodeVisitor {
+            
+        }
+    }
+
+    package "metrics" {
+        package "categories" {
+        }
+        package "calculator" {
+            class MetricsCalculator {
+                
+            }
+        }
+    }
+
+        /'
+    c o-- InitCommonsNodeVisitor
+    c o-- LCOMNodeVisitor
+    c o-- CCNodeVisitor
+    c o-- HierarchyNodeVisitor
+    c o-- MethodsCalledNodeVisitor
+    '/
+    
+  }
+
+
+
+  app.gui.calculationsWindow.Ui_metricsWindow --o app.gui.mainWindow.Ui_MainWindow : ui
+  app.gui.metricsManualWindow.Ui_Dialog --o app.gui.calculationsWindow.Ui_metricsWindow : ui
+  app.gui.metricsManualWindow.Ui_Dialog --o app.gui.mainWindow.Ui_MainWindow : ui
+
+
+  app.gui.mainWindow.Ui_MainWindow --o InitCommonsNodeVisitor
+  app.gui.mainWindow.Ui_MainWindow --o Project
+  app.gui.mainWindow.Ui_MainWindow --o MetricsCalculator
+  app.gui.mainWindow.Ui_MainWindow --o AstGenerator
+
+  app.gui.calculationsWindow.Ui_metricsWindow --o MetricsCalculator
+
+@enduml

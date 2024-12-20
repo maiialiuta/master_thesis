@@ -1,0 +1,69 @@
+@startuml packages
+set namespaceSeparator none
+package "App" as app {
+    package "gui" as app.gui {
+        class "calculationsWindow" as app.gui.calculationsWindow { }
+        class "mainWindow" as app.gui.mainWindow { }
+        class "metricsManualWindow" as app.gui.metricsManualWindow { }
+    }
+
+    class "main" as app.main {
+    }
+    package "src" as app.src {
+        package "entities" as app.src.entities {
+            class "class_entity" as app.src.entities.class_entity { }
+            class "python_file" as app.src.entities.python_file { }
+            class "the_project" as app.src.entities.the_project { }
+        }
+
+        package "generator" as app.src.generator {
+            class "generate_ast" as app.src.generator.generate_ast {}
+        }
+
+        package "metrics" as app.src.metrics {
+            package "calculator" as app.src.metrics.calculator {
+                class "metrics_calculator" as app.src.metrics.calculator.metrics_calculator {}
+            }
+
+            package "categories" as app.src.metrics.categories {
+                class "Cohesion" as app.src.metrics.categories.cohesion_category { }
+                class "Complexity" as app.src.metrics.categories.complexity_category { }
+                class "Coupling" as app.src.metrics.categories.coupling_category { }
+                class "Size" as app.src.metrics.categories.size_category { }
+            }
+        }
+
+        package "visitors" as app.src.visitors {
+            class "cc_visitor" as app.src.visitors.cc_visitor { }
+            class "class_attr_visitor" as app.src.visitors.class_attr_visitor { }
+            class "hierarchy_visitor" as app.src.visitors.hierarchy_visitor { }
+            class "init_visitor" as app.src.visitors.init_visitor { }
+            class "lcom_visitor" as app.src.visitors.lcom_visitor { }
+            class "loc_counter" as app.src.visitors.loc_counter { }
+            class "remote_methods_called_visitor" as app.src.visitors.remote_methods_called_visitor { }
+        }
+    }
+}
+
+app.gui.calculationsWindow --> app.gui.metricsManualWindow
+app.gui.calculationsWindow --> app.src.metrics.calculator.metrics_calculator
+app.gui.mainWindow --> app.gui.calculationsWindow
+app.gui.mainWindow --> app.gui.metricsManualWindow
+app.gui.mainWindow --> app.src.entities.the_project
+app.gui.mainWindow --> app.src.generator.generate_ast
+app.gui.mainWindow --> app.src.metrics.calculator.metrics_calculator
+app.gui.mainWindow --> app.src.visitors.init_visitor
+app.main --> app.gui.mainWindow
+app.src.generator.generate_ast --> app.src.entities.python_file
+app.src.metrics.calculator.metrics_calculator --> app.src.visitors.cc_visitor
+app.src.metrics.calculator.metrics_calculator --> app.src.visitors.hierarchy_visitor
+app.src.metrics.calculator.metrics_calculator --> app.src.visitors.lcom_visitor
+app.src.metrics.calculator.metrics_calculator --> app.src.visitors.loc_counter
+app.src.metrics.calculator.metrics_calculator --> app.src.visitors.remote_methods_called_visitor
+app.src.visitors.init_visitor --> app.src.entities.class_entity
+app.src.visitors.init_visitor --> app.src.metrics.categories.cohesion_category
+app.src.visitors.init_visitor --> app.src.metrics.categories.complexity_category
+app.src.visitors.init_visitor --> app.src.metrics.categories.coupling_category
+app.src.visitors.init_visitor --> app.src.metrics.categories.size_category
+app.src.visitors.init_visitor --> app.src.visitors.class_attr_visitor
+@enduml

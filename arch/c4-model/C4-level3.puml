@@ -1,0 +1,50 @@
+@startuml C4-Level3
+    !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+
+	skinparam wrapWidth 300
+	LAYOUT_LANDSCAPE()
+
+	title
+	    <b>Metrics Calculator Level 3 v2024.11.24</b>
+	end title
+
+    Person(user, "Користувач")
+    Person(researcher, "Дослідник")
+
+	System_Boundary(stat, "Скрипти статистичного аналізу") {
+	    System_Ext(stat_analysis, "Кореляційний та ANOVA-аналіз", "Pandas, SciPy")
+        System_Ext(regression_model, "Регресійна модель", "scikit-learn")
+	}
+
+	System_Boundary(software_system, "Metrics Calculator") {
+        Container(gui, "Графічний інтерфейс", "PyQT5") {
+            Component(choose_folder, "Вибір проєкту", "Відповідає за вибір теки проєкту")
+            Component(show_metrics, "Запуск обчислення метрик", "Відповідає за вибір теки проєкту")
+            Component(load_help, "Довідка", "Містить розшифрування абревіатур метрик")
+        }
+        
+
+        Container(metrics_calculator, "Бекенд", "Python, PyQT5, ast, Pandas") { 
+            Component(entities, "Модель (сутності)", "Описує програмне відображення для організаційних одиниць: проєкту, модуля, класу")
+            Component(load_folder, "Завантажувач теки", "Формує шлях до обраної теки та об'єкт PythonFile для відтворення структури проєкту")           
+            Component(ast_generator, "Генератор АСД", "Виконує генерацію АСД, його парсинг та обхід модулів і класів проєкту") 
+            Component(calc_metrics, "Калькулятор метрик", "Обчислює метрики для кожного виявленого класу ")
+            
+
+        }
+
+        Container(fs, "Файлова система")
+        
+	}
+
+    Rel(user, choose_folder, "Вибір проєкту", "QFileDialog")
+    Rel(researcher, choose_folder, "Вибір проєкту", "QFileDialog")
+    Rel(gui, metrics_calculator, "Обчислення метрик", "Python, ast, Pandas")
+    Rel(metrics_calculator, gui, "Відображення рехультатів обчислень", "PyQT5")
+
+    Rel(fs, metrics_calculator,  "Проєкт", "QFileDialog")
+    Rel(metrics_calculator, fs, "Excel-звіт", "Pandas")
+    Rel_U(fs, stat, "Завантаження звіту", "Pandas")
+    Rel(researcher, fs, "Вибір Excel-звіту") 
+@enduml

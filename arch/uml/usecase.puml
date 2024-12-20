@@ -1,0 +1,26 @@
+@startuml
+
+    title Типовий сценарій використання аналізатора коду на основі метрик
+    skinparam actorStyle awesome
+
+    actor "Розробник" as dev
+    actor "Менеджер" as manager
+
+    (Аналіз коду) as analysis
+    (Підготовка) as prep
+    (Парсинг коду) as parse
+    (Обчислення метрик) as calc
+    (Формування звіту) as report
+
+
+    dev -> analysis: завантажує \nтеку \nпроєкта
+    analysis .> calc: <<include>>
+    analysis .> parse: <<include>>
+
+    analysis .> report: <<include>>
+    manager <-- report: "аналізує результати\n та коригує план"
+    dev <-- report: здійснює\n рефакторинг
+    dev -> prep: вивчає\n документацію\n інструмента
+    parse --> calc
+    calc --> report
+@enduml

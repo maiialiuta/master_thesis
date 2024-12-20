@@ -1,0 +1,83 @@
+@startuml entities
+    class Project {
+        root_folder_path: str
+        project_name: str
+        python_files: list
+
+        __init__(self, root_folder_path, project_name)
+        get_root_folder_path(self): str
+        get_project_name(self): str
+        get_files(self): list
+        add_python_file(self, python_file_obj)
+    }
+
+    class "Class" as c {
+        class_name: str
+        python_file_obj: PythonFile
+        class_ast_node: ClassDef
+        fields: set
+        methods: dict
+        hierarchy: int
+        cohesion_category_metrics: CohesionCategory
+        complexity_category_metrics: ComplexityCategory
+        coupling_category_metrics: CouplingCategory
+        size_category_metrics: SizeCategory
+
+        __init__(self, class_name, python_file_obj, class_ast_node, \n\
+        cohesion_category_metrics, complexity_category_metrics, \n\
+        coupling_category_metrics, size_category_metrics)
+        get_class_name(self): str
+        get_hierarchy(self): int
+        get_python_file_obj(self): PythonFile
+        get_class_ast_node(self): ClassDef
+        get_methods(self): dict
+        get_fields(self): set
+        get_cohesion_category_metrics(self): CohesionCategory
+        get_complexity_category_metrics(self): ComplexityCategory
+        get_coupling_category_metrics(self): CouplingCategory
+        get_size_category_metrics(self): SizeCategory
+        set_hierarchy(self, value)
+        add_method(self, method_name, params)
+        add_field(self, field)
+    }
+
+    class PythonFile {
+        project_obj: Project
+        file_name: str
+        file_full_path: str
+        generated_ast: generator.AstGenerator
+        classes: list
+
+        get_project_obj(self): Project
+        get_file_name(self): str
+        get_file_full_path(self): str
+        get_generated_ast(self): generator.AstGenerator
+        get_file_classes(self): list
+        add_class(self, class_obj)
+    }
+
+    package "generator" {
+        class AstGenerator {}
+    }
+
+    package "metrics" {
+        package "categories" {
+            class ComplexityCategory {
+                
+            }
+            class CohesionCategory {}
+            class SizeCategory {}
+            class CouplingCategory {}
+        }
+    }
+
+
+    Project o-- PythonFile
+    AstGenerator *-- PythonFile
+    c o-- ComplexityCategory
+    c o-- CohesionCategory
+    c o-- SizeCategory
+    c o-- CouplingCategory 
+
+
+@enduml

@@ -1,0 +1,34 @@
+@startuml C4-Level2
+	!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+	skinparam wrapWidth 300
+	LAYOUT_LANDSCAPE()
+
+	title
+	    <b>Metrics Calculator Level 2 v2024.11.24</b>
+	end title
+
+    Person(user, "Користувач")
+    Person(researcher, "Дослідник")
+
+	System_Boundary(stat, "Скрипти статистичного аналізу") {
+	    System_Ext(stat_analysis, "Кореляційний та ANOVA-аналіз", "Pandas, SciPy")
+        System_Ext(regression_model, "Регресійна модель", "scikit-learn")
+	}
+
+	System_Boundary(software_system, "Metrics Calculator") {
+        Container(metrics_calculator, "Бізнес-логіка", "Python, PyQT5, ast, Pandas")
+        Container(fs, "Файлова система")
+        Container(gui, "Графічний інтерфейс", "PyQT5")
+	}
+
+    Rel(user, gui, "Вибір проєкту", "QFileDialog")
+    Rel(researcher, gui, "Вибір проєкту", "QFileDialog")
+    Rel(gui, metrics_calculator, "Обчислення метрик", "Python, ast, Pandas")
+    Rel(metrics_calculator, gui, "Відображення рехультатів обчислень", "PyQT5")
+
+    Rel(fs, metrics_calculator,  "Проєкт", "QFileDialog")
+    Rel(metrics_calculator, fs, "Excel-звіт", "Pandas")
+    Rel_U(fs, stat, "Завантаження звіту", "Pandas")
+    Rel(researcher, fs, "Вибір Excel-звіту") 
+@enduml

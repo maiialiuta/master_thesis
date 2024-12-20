@@ -1,0 +1,67 @@
+@startuml SequenceDiagram
+    skinparam sequenceParticipant underline
+
+    actor "Користувач" as dev
+
+    dev -> ":Основне вікно" as main: Відкрити теку проєкта
+    activate main
+
+    participant ":Генератор АСД" as generator
+    participant ":Класи-відвідувачі" as visitors
+    participant ":Калькулятор метрик" as calc
+    participant ":Вікно обчислених метрик" as table
+    participant ":Excel-звіт" as excel
+    participant ":Довідка" as help
+    participant ":Статистичний аналіз" as stat
+    
+    
+
+    
+    alt "Успішний вибір"
+        main -> generator: Сформувати АСД
+        activate generator
+
+        loop "Обхід модулів проєкту"
+            generator -> visitors: Взяти клас
+            activate visitors
+
+            visitors -> calc: Обчислити метрики \nдля кдасу
+            activate calc
+
+            calc --> generator: Записати \nрезультати \nобчислень
+            
+            deactivate visitors
+            deactivate calc
+
+            
+        end
+        
+        generator --> main: Повернутись до \nосновного вікна
+        deactivate generator
+        
+        main -> table: Відобразити показники на екрані
+        
+        activate table
+
+        table --> dev: Переглянути результати обчислень
+
+        dev -> excel: Сформувати звіт для аналізу
+        activate excel
+        excel -> stat: Виконати статистичний аналіз результатів
+        activate stat
+        stat --> dev: Отримати результати аналізу
+        deactivate stat
+        deactivate excel
+
+        dev -> help: Розшифрувати назви метрик \nв довідці
+        activate help
+        help --> table: Переглянути результати
+        deactivate help
+
+        deactivate table
+        deactivate main
+
+    else "Не вдалось обрати теку"
+        main --> dev: Повернути статус вибору проєкта
+    end
+@enduml

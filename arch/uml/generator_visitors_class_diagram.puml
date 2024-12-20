@@ -1,0 +1,96 @@
+@startuml gen_visitors
+    package "enteties" {
+        class Project {
+            
+        }
+
+        class "Class" as c {
+            
+        }
+
+        class PythonFile {
+            
+        }
+    }
+    package "generator" {
+        class AstGenerator {
+            project_obj: PythonFile
+
+            __init__(self, project_obj)
+            start_parsing(self)
+            read_root_project_folder(self)
+            create_ast(self, python_file_str, file_name, full_file_path)
+        }
+    }
+
+    package "metrics" {
+        package "categories" {
+            class ComplexityCategory {
+                wmpc1: float
+                wmpc2: float
+                dit: float
+                rfc: float
+
+                get_dit(self): float
+                get_rfc(self): float
+                get_wmpc1(self): float
+                get_wmpc2(self): float
+                set_dit(self)
+                set_rfc(self)
+                set_wmpc1(self)
+                set_wmpc2(self)
+            }
+
+            class CohesionCategory {
+                lcom: float
+
+                get_lcom(self): float
+                set_lcom(self, value)
+            }
+
+            class SizeCategory {
+                nocc: float
+                nom: float
+                loc: float
+                size2: float
+                wac: float
+
+                get_nocc(self): float
+                get_nom(self): float
+                get_loc(self): float
+                get_size2(self): float
+                get_wac(self): float
+
+                set_nocc(self, value)
+                set_nom(self, value)
+                set_loc(self, value)
+                set_size2(self, value)
+                set_wac(self, value)
+            }
+
+            class CouplingCategory {
+                cbo: float
+                mpc: float
+
+                get_cbo(self): float
+                get_mpc(self): float
+                set_cbo(self, value)
+                set_mpc(self, value)
+            }
+        }
+        package "calculator" {
+            class MetricsCalculator {}
+        }
+    }
+
+
+    Project o--o PythonFile
+    AstGenerator o--o PythonFile
+    c o-- ComplexityCategory
+    c o-- CohesionCategory
+    c o-- SizeCategory
+    c o-- CouplingCategory 
+    c *-- PythonFile
+    AstGenerator o-- c
+
+@enduml
